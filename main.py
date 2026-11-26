@@ -39,6 +39,11 @@ def main():
         raise SystemExit("entry fails the 1-120 character gate")
     if not LINE.strip():
         raise SystemExit("entry is blank")
+    encoded = LINE.encode("utf-8")
+    if encoded.decode("utf-8") != LINE:
+        raise SystemExit("entry fails UTF-8 round-trip")
+    if any(byte < 0x20 or byte == 0x7F for byte in encoded):
+        raise SystemExit("entry contains a control character")
     path = output_path()
     folder = os.path.dirname(path)
     if folder:
